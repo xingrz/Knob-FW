@@ -11,6 +11,8 @@
 #include "tasks.h"
 #include "pinout.h"
 
+#include "hid.h"
+
 #define DIR_CW 0x10  // Clockwise step.
 #define DIR_CCW 0x20  // Anti-clockwise step.
 
@@ -48,6 +50,14 @@ rotary_handler(void *arg)
 	}
 }
 
+static void
+report_key(uint8_t key)
+{
+	hid_report_key(key, true);
+	vTaskDelay(5 / portTICK_PERIOD_MS);
+	hid_report_key(key, false);
+}
+
 void
 task_rotary(void *arg)
 {
@@ -72,9 +82,9 @@ task_rotary(void *arg)
 		}
 
 		if (msg == DIR_CW) {
-			ESP_LOGI(TAG, "CW");
+			report_key(HID_KEY_VOLUME_UP);
 		} else if (msg == DIR_CCW) {
-			ESP_LOGI(TAG, "CCW");
+			report_key(HID_KEY_VOLUME_DOWN);
 		}
 	}
 
