@@ -259,17 +259,15 @@ hidd_event_callback(void *handler_args, esp_event_base_t base, int32_t id, void 
 			break;
 		}
 		case ESP_HIDD_OUTPUT_EVENT: {
-			ESP_LOGI(TAG, "OUTPUT[%u]: %8s ID: %2u, Len: %d, Data:", param->output.map_index,
+			ESP_LOGI(TAG, "OUTPUT[%u]: %8s ID: %2u, Len: %d", param->output.map_index,
 					esp_hid_usage_str(param->output.usage), param->output.report_id,
 					param->output.length);
-			ESP_LOG_BUFFER_HEX(TAG, param->output.data, param->output.length);
 			break;
 		}
 		case ESP_HIDD_FEATURE_EVENT: {
-			ESP_LOGI(TAG, "FEATURE[%u]: %8s ID: %2u, Len: %d, Data:", param->feature.map_index,
+			ESP_LOGI(TAG, "FEATURE[%u]: %8s ID: %2u, Len: %d", param->feature.map_index,
 					esp_hid_usage_str(param->feature.usage), param->feature.report_id,
 					param->feature.length);
-			ESP_LOG_BUFFER_HEX(TAG, param->feature.data, param->feature.length);
 			break;
 		}
 		case ESP_HIDD_DISCONNECT_EVENT: {
