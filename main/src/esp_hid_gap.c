@@ -605,8 +605,8 @@ esp_err_t esp_hid_ble_gap_adv_init(uint16_t appearance, const char *device_name)
     esp_ble_auth_req_t auth_req = ESP_LE_AUTH_REQ_SC_MITM_BOND;
     //esp_ble_io_cap_t iocap = ESP_IO_CAP_OUT;//you have to enter the key on the host
     //esp_ble_io_cap_t iocap = ESP_IO_CAP_IN;//you have to enter the key on the device
-    esp_ble_io_cap_t iocap = ESP_IO_CAP_IO;//you have to agree that key matches on both
-    //esp_ble_io_cap_t iocap = ESP_IO_CAP_NONE;//device is not capable of input or output, unsecure
+    //esp_ble_io_cap_t iocap = ESP_IO_CAP_IO;//you have to agree that key matches on both
+    esp_ble_io_cap_t iocap = ESP_IO_CAP_NONE;//device is not capable of input or output, unsecure
     uint8_t init_key = ESP_BLE_ENC_KEY_MASK | ESP_BLE_ID_KEY_MASK;
     uint8_t rsp_key = ESP_BLE_ENC_KEY_MASK | ESP_BLE_ID_KEY_MASK;
     uint8_t key_size = 16; //the key size should be 7~16 bytes
