@@ -34,5 +34,8 @@ app_main()
 	assert(pdPASS == xTaskCreate(task_rotary, "task_rotary", TASK_ROTARY_STACK_SIZE, NULL,
 							 tskIDLE_PRIORITY + 1, NULL));
 
+	assert(pdPASS == xTaskCreate(task_button, "task_button", TASK_BUTTON_STACK_SIZE, NULL,
+							 tskIDLE_PRIORITY + 1, NULL));
+
 	ESP_LOGI(TAG, "SYSTEM READY");
 }
