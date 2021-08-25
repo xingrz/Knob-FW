@@ -18,6 +18,8 @@
 #include "hid.h"
 #include "esp_hid_gap.h"
 
+#include "led.h"
+
 #define COUNT(x) (sizeof(x) / sizeof(x[0]))
 
 #include "hid_descriptors.h"
@@ -119,6 +121,7 @@ hidd_event_callback(void *handler_args, esp_event_base_t base, int32_t id, void 
 		}
 		case ESP_HIDD_CONNECT_EVENT: {
 			ESP_LOGI(TAG, "CONNECT");
+			led_set(true);
 			dev_connected = true;  // todo: this should be on auth_complete (in GAP)
 			break;
 		}
@@ -149,6 +152,7 @@ hidd_event_callback(void *handler_args, esp_event_base_t base, int32_t id, void 
 					esp_hid_disconnect_reason_str(esp_hidd_dev_transport_get(param->disconnect.dev),
 							param->disconnect.reason));
 			dev_connected = false;
+			led_set(false);
 			esp_hid_ble_gap_adv_start();
 			break;
 		}

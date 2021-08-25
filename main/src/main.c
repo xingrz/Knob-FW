@@ -10,6 +10,7 @@
 
 #include "tasks.h"
 #include "hid.h"
+#include "led.h"
 
 static esp_err_t
 app_nvs_init()
@@ -30,6 +31,7 @@ app_main()
 	ESP_ERROR_CHECK(gpio_install_isr_service(0));
 
 	hid_init("XiNGRZ", "knob");
+	led_init();
 
 	assert(pdPASS == xTaskCreate(task_rotary, "task_rotary", TASK_ROTARY_STACK_SIZE, NULL,
 							 tskIDLE_PRIORITY + 1, NULL));
