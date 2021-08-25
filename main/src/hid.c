@@ -304,7 +304,7 @@ hid_init(const char *manufacturer_name, const char *device_name)
 	hid_config.manufacturer_name = manufacturer_name;
 	hid_config.device_name = device_name;
 
-	ret = esp_hid_ble_gap_adv_init(ESP_HID_APPEARANCE_GENERIC, hid_config.device_name);
+	ret = esp_hid_ble_gap_adv_init(ESP_HID_APPEARANCE_KEYBOARD, hid_config.device_name);
 	if (ret != ESP_OK) {
 		ESP_LOGE(TAG, "esp_hid_ble_gap_adv_init failed: %d", ret);
 		return;
