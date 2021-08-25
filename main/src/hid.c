@@ -24,7 +24,11 @@
 
 static esp_hid_raw_report_map_t report_maps[] = {
 		{.data = hidapiReportMap, .len = sizeof(hidapiReportMap)},
+#ifdef HID_USE_CONSUMER_CONTROL
+		{.data = consumerReportMap, .len = sizeof(consumerReportMap)},
+#else
 		{.data = keyboardReportMap, .len = sizeof(keyboardReportMap)},
+#endif
 };
 
 static esp_hid_device_config_t hid_config = {
@@ -39,11 +43,21 @@ static esp_hid_device_config_t hid_config = {
 static esp_hidd_dev_t *hid_dev = NULL;
 static bool dev_connected = false;
 
+#define HID_CC_RPT_MUTE 0
+#define HID_CC_RPT_VOLUME_DECREMENT 1
+#define HID_CC_RPT_VOLUME_INCREMENT 2
+
 // Keyboard input report ID
 #define HID_RPT_ID_KEY_IN 2
 
 // HID keyboard input report length
 #define HID_KEYBOARD_IN_RPT_LEN 8
+
+// HID Consumer Control input report ID
+#define HID_RPT_ID_CC_IN 3
+
+// HID Consumer Control input report length
+#define HID_CC_IN_RPT_LEN 1
 
 void
 esp_hidd_send_keyboard_value(uint8_t special_key_mask, uint8_t *keyboard_cmd, uint8_t num_key)
@@ -66,6 +80,29 @@ esp_hidd_send_keyboard_value(uint8_t special_key_mask, uint8_t *keyboard_cmd, ui
 			buffer[3], buffer[4], buffer[5], buffer[6], buffer[7]);
 
 	esp_hidd_dev_input_set(hid_dev, 1, HID_RPT_ID_KEY_IN, buffer, HID_KEYBOARD_IN_RPT_LEN);
+}
+
+void
+esp_hidd_send_consumer_value(uint8_t key_cmd, bool key_pressed)
+{
+	uint8_t buffer[HID_CC_IN_RPT_LEN] = {0};
+	if (key_pressed) {
+		switch (key_cmd) {
+			case HID_KEY_MUTE:
+				buffer[0] |= (1 << HID_CC_RPT_MUTE);
+				break;
+			case HID_KEY_VOLUME_UP:
+				buffer[0] |= (1 << HID_CC_RPT_VOLUME_INCREMENT);
+				break;
+			case HID_KEY_VOLUME_DOWN:
+				buffer[0] |= (1 << HID_CC_RPT_VOLUME_DECREMENT);
+				break;
+			default:
+				break;
+		}
+	}
+
+	esp_hidd_dev_input_set(hid_dev, 1, HID_RPT_ID_CC_IN, buffer, HID_CC_IN_RPT_LEN);
 }
 
 static void
@@ -162,6 +199,10 @@ void
 hid_report_key(uint8_t key, bool pressed)
 {
 	if (!dev_connected) return;
+#ifdef HID_USE_CONSUMER_CONTROL
+	esp_hidd_send_consumer_value(key, pressed);
+#else
 	uint8_t keys[] = {key};
 	esp_hidd_send_keyboard_value(0, keys, pressed ? 1 : 0);
+#endif
 }

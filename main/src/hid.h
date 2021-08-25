@@ -4,6 +4,8 @@
 #include <stdint.h>
 #include <stdbool.h>
 
+#define HID_USE_CONSUMER_CONTROL
+
 // HID Keyboard/Keypad Usage IDs (subset of the codes available in the USB HID Usage Tables spec)
 #define HID_KEY_RESERVED 0  // No event inidicated
 #define HID_KEY_A 4  // Keyboard a and A
