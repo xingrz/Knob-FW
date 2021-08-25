@@ -8,6 +8,8 @@
 
 #include <driver/gpio.h>
 
+#include "task_rotary.h"
+
 #include "tasks.h"
 #include "pinout.h"
 
@@ -46,6 +48,7 @@ task_button(void *arg)
 			continue;
 		}
 
+		rotary_lock(500);
 		hid_report_key(HID_KEY_MUTE, msg);
 	}
 

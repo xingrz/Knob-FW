@@ -8,6 +8,8 @@
 
 #include <driver/gpio.h>
 
+#include "task_rotary.h"
+
 #include "tasks.h"
 #include "pinout.h"
 
@@ -36,6 +38,8 @@ static const uint8_t ENC_TABLE[7][4] = {
 
 static xQueueHandle enc_q = NULL;
 static uint8_t enc_state = R_START;
+
+static volatile TickType_t lock_until = 0;
 
 static void
 rotary_handler(void *arg)
@@ -81,6 +85,10 @@ task_rotary(void *arg)
 			continue;
 		}
 
+		if (xTaskGetTickCount() < lock_until) {
+			continue;
+		}
+
 		if (msg == DIR_CW) {
 			report_key(HID_KEY_VOLUME_UP);
 		} else if (msg == DIR_CCW) {
@@ -89,4 +97,11 @@ task_rotary(void *arg)
 	}
 
 	vTaskDelete(NULL);
+}
+
+void
+rotary_lock(int timeout_ms)
+{
+	TickType_t current = xTaskGetTickCount();
+	lock_until = current + timeout_ms / portTICK_PERIOD_MS;
 }
