@@ -23,5 +23,5 @@ led_init(void)
 void
 led_set(bool on)
 {
-	gpio_set_level(PIN_STATUS, !on);
+	gpio_set_level(PIN_STATUS, on);
 }
