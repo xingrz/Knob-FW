@@ -45,6 +45,10 @@ static esp_hid_device_config_t hid_config = {
 static esp_hidd_dev_t *hid_dev = NULL;
 static bool dev_connected = false;
 
+#define HID_KEY_MUTE 127
+#define HID_KEY_VOLUME_UP 128
+#define HID_KEY_VOLUME_DOWN 129
+
 #define HID_CC_RPT_MUTE 0
 #define HID_CC_RPT_VOLUME_DECREMENT 1
 #define HID_CC_RPT_VOLUME_INCREMENT 2
@@ -75,7 +79,19 @@ esp_hidd_send_keyboard_value(uint8_t special_key_mask, uint8_t *keyboard_cmd, ui
 	buffer[0] = special_key_mask;
 
 	for (int i = 0; i < num_key; i++) {
-		buffer[i + 2] = keyboard_cmd[i];
+		switch (keyboard_cmd[i]) {
+			case KEY_MUTE:
+				buffer[i + 2] = HID_KEY_MUTE;
+				break;
+			case KEY_VOLUMEUP:
+				buffer[i + 2] = HID_KEY_VOLUME_UP;
+				break;
+			case KEY_VOLUMEDOWN:
+				buffer[i + 2] = HID_KEY_VOLUME_DOWN;
+				break;
+			default:
+				break;
+		}
 	}
 
 	ESP_LOGD(TAG, "the key vaule = %d,%d,%d, %d, %d, %d,%d, %d", buffer[0], buffer[1], buffer[2],
@@ -90,13 +106,13 @@ esp_hidd_send_consumer_value(uint8_t key_cmd, bool key_pressed)
 	uint8_t buffer[HID_CC_IN_RPT_LEN] = {0};
 	if (key_pressed) {
 		switch (key_cmd) {
-			case HID_KEY_MUTE:
+			case KEY_MUTE:
 				buffer[0] |= (1 << HID_CC_RPT_MUTE);
 				break;
-			case HID_KEY_VOLUME_UP:
+			case KEY_VOLUMEUP:
 				buffer[0] |= (1 << HID_CC_RPT_VOLUME_INCREMENT);
 				break;
-			case HID_KEY_VOLUME_DOWN:
+			case KEY_VOLUMEDOWN:
 				buffer[0] |= (1 << HID_CC_RPT_VOLUME_DECREMENT);
 				break;
 			default:

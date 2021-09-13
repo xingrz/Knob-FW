@@ -49,7 +49,7 @@ task_button(void *arg)
 		}
 
 		rotary_lock(500);
-		hid_report_key(HID_KEY_MUTE, msg);
+		hid_report_key(KEY_MUTE, msg);
 	}
 
 	vTaskDelete(NULL);

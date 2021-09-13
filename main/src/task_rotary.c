@@ -90,9 +90,9 @@ task_rotary(void *arg)
 		}
 
 		if (msg == DIR_CW) {
-			report_key(HID_KEY_VOLUME_UP);
+			report_key(KEY_VOLUMEUP);
 		} else if (msg == DIR_CCW) {
-			report_key(HID_KEY_VOLUME_DOWN);
+			report_key(KEY_VOLUMEDOWN);
 		}
 	}
 
