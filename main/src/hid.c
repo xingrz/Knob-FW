@@ -167,7 +167,7 @@ hidd_event_callback(void *handler_args, esp_event_base_t base, int32_t id, void 
 }
 
 void
-hid_init(const char *manufacturer_name, const char *device_name)
+hid_init(const char *manufacturer_name, const char *device_name_prefix)
 {
 	esp_err_t ret;
 
@@ -176,6 +176,13 @@ hid_init(const char *manufacturer_name, const char *device_name)
 		ESP_LOGE(TAG, "esp_hid_gap_init failed: %d", ret);
 		return;
 	}
+
+	esp_bd_addr_t addr;
+	uint8_t addr_type;
+	esp_ble_gap_get_local_used_addr(addr, &addr_type);
+
+	char device_name[40];
+	sprintf(device_name, "%s-%02X%02X", device_name_prefix, addr[4], addr[5]);
 
 	hid_config.manufacturer_name = manufacturer_name;
 	hid_config.device_name = device_name;

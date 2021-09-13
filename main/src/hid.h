@@ -115,7 +115,7 @@
 #define HID_KEY_RIGHT_ALT 230  // Keyboard LeftAlt
 #define HID_KEY_RIGHT_GUI 231  // Keyboard RightGUI
 
-void hid_init(const char *manufacturer_name, const char *device_name);
+void hid_init(const char *manufacturer_name, const char *device_name_prefix);
 void hid_report_key(uint8_t key, bool pressed);
 
 #endif  // __PROJECT_HID__
