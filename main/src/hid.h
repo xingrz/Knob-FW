@@ -9,6 +9,8 @@
 #define KEY_MUTE 113
 #define KEY_VOLUMEDOWN 114
 #define KEY_VOLUMEUP 115
+#define KEY_BRIGHTNESSDOWN 224
+#define KEY_BRIGHTNESSUP 225
 
 void hid_init(const char *manufacturer_name, const char *device_name_prefix);
 void hid_report_key(uint8_t key, bool pressed);

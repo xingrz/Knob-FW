@@ -52,6 +52,8 @@ static bool dev_connected = false;
 #define HID_CC_RPT_MUTE 0
 #define HID_CC_RPT_VOLUME_DECREMENT 1
 #define HID_CC_RPT_VOLUME_INCREMENT 2
+#define HID_CC_RPT_BRIGHTNESS_DECREMENT 3
+#define HID_CC_RPT_BRIGHTNESS_INCREMENT 4
 
 // Keyboard input report ID
 #define HID_RPT_ID_KEY_IN 2
@@ -114,6 +116,12 @@ esp_hidd_send_consumer_value(uint8_t key_cmd, bool key_pressed)
 				break;
 			case KEY_VOLUMEDOWN:
 				buffer[0] |= (1 << HID_CC_RPT_VOLUME_DECREMENT);
+				break;
+			case KEY_BRIGHTNESSUP:
+				buffer[0] |= (1 << HID_CC_RPT_BRIGHTNESS_INCREMENT);
+				break;
+			case KEY_BRIGHTNESSDOWN:
+				buffer[0] |= (1 << HID_CC_RPT_BRIGHTNESS_DECREMENT);
 				break;
 			default:
 				break;
