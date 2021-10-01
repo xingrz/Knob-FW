@@ -1,0 +1,43 @@
+name: Auto build
+
+on:
+  push:
+    branches: [ master ]
+    tags: [ '*' ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: true
+          fetch-depth: 0
+
+      - uses: benjlevesque/short-sha@v1.2
+        id: short-sha
+
+      - name: Build project
+        run: |
+          docker pull espressif/idf:latest
+          docker run --rm -v $PWD:/project -w /project espressif/idf:latest idf.py build
+          bash .github/workflows/make_flash_zip.sh
+          mkdir -p upload
+          mv flash.zip upload/Knob-${{ steps.short-sha.outputs.sha }}
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: Knob-${{ steps.short-sha.outputs.sha }}
+          path: upload/
+
+      - name: Release binaries
+        uses: fnkr/github-action-ghr@v1
+        if: startsWith(github.ref, 'refs/tags/')
+        env:
+          GHR_COMPRESS: zip
+          GHR_PATH: upload/
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
